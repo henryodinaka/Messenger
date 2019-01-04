@@ -2,13 +2,15 @@ package com.leo.henry.messenger.service;
 
 import com.leo.henry.messenger.database.DataSource;
 import com.leo.henry.messenger.exceptions.DataNotFoundException;
+import com.leo.henry.messenger.exceptions.ExceptionResponseBuilder;
 import com.leo.henry.messenger.model.Comment;
-import com.leo.henry.messenger.model.ErrorMessage;
 import com.leo.henry.messenger.model.Message;
 
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
-import java.util.*;
+import javax.ws.rs.WebApplicationException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class CommentService {
     private Map<Long,Message> messages = DataSource.getMessages();
@@ -17,15 +19,12 @@ public class CommentService {
     {
         Message message = messages.get(messageId);
         if (message == null)
-        {
-            throw new DataNotFoundException("message with Id: "+messageId +" not found");
-        }
+            throw new WebApplicationException(ExceptionResponseBuilder.buildResponse("message with Id: "+messageId +" not found",404,null));
 
         Map<Long,Comment> comments = message.getComments();
         if (comments.size() <=0)
-        {
             throw new DataNotFoundException("Message with Id: "+messageId+" has no comments");
-        }
+
         return new ArrayList<>(comments.values());
     }
 
@@ -33,15 +32,13 @@ public class CommentService {
     {
         Message message = messages.get(messageId);
         if (message == null)
-        {
-            throw new DataNotFoundException("message with Id: "+messageId +" not found");
-        }
+           throw new DataNotFoundException("message with Id: "+messageId +" not found");
+
 
         Map<Long,Comment> comments = message.getComments();
         if (comments.size() <= 0)
-        {
             throw new DataNotFoundException("Message with Id: "+messageId+" has no comments");
-        }
+
         return comments.get(commentId);
     }
 

@@ -6,11 +6,11 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
 
-public class ExeptionResponseBuilder {
+public class ExceptionResponseBuilder {
 
-    public static Response buildResponse(String errorMsg,int statusCode)
+    public static Response buildResponse(String errorMsg,int statusCode,String documentation)
     {
-        ErrorMessage errorMessage  = new ErrorMessage(errorMsg,statusCode,"");
+        ErrorMessage errorMessage  = new ErrorMessage(errorMsg,statusCode,documentation);
         return Response.status(statusCode).entity(errorMessage).build();
     }
 }
