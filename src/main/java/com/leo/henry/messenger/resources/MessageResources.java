@@ -13,8 +13,8 @@ import java.net.URI;
 import java.util.List;
 
 @Path("/messages")
-@Consumes(value = {MediaType.APPLICATION_JSON,MediaType.TEXT_XML})
-@Produces(value = {MediaType.APPLICATION_JSON,MediaType.TEXT_XML})
+@Consumes(value = {MediaType.APPLICATION_JSON})
+@Produces(value = {MediaType.APPLICATION_JSON})
 public class MessageResources {
     MessageService messageService = new MessageService();
     @GET

@@ -1,5 +1,6 @@
 package com.leo.henry.messenger.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +18,9 @@ public class Profile implements Serializable {
     private String firstName;
     private String lastName;
     private String profileName;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private Date createdAt;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private Date updatedAt;
 
     public Profile(Long id,String firstName, String lastName, String profileName, Date createdAt) {

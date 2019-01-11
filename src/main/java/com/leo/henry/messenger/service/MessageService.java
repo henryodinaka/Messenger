@@ -12,9 +12,9 @@ public class MessageService {
    private Map<Long,Message> messages = DataSource.getMessages();
    public  MessageService()
    {
-       Message m1  = new Message(1L,"I love You",new Date(),"Henry");
-       Message m2  = new Message(2L,"I will marry You",new Date(),"Jeo");
-       Message m3  = new Message(3L,"I will Kiss you",new Date(),"Leo");
+       Message m1  = new Message(1L,"I love You","Henry");
+       Message m2  = new Message(2L,"I will marry You","Jeo");
+       Message m3  = new Message(3L,"I will Kiss you","Leo");
        messages.put(1L,m1);
        messages.put(2L,m2);
        messages.put(3L,m3);
@@ -53,7 +53,6 @@ public class MessageService {
     public Message postMessage(Message message)
     {
         message.setId(messages.size()+1L);
-        message.setCreatedAt(new Date());
         messages.put(message.getId(),message);
         return message;
     }
@@ -63,11 +62,11 @@ public class MessageService {
         if (id <=0) return null;
         Message messageToBeUpdated = messages.get(id);
         if (messageToBeUpdated ==null) return null;
-        message.setId(id);
-        message.setCreatedAt(messageToBeUpdated.getCreatedAt());
-        message.setUpdatedAt(new Date());
-        messages.put(message.getId(),message);
-        return message;
+        messageToBeUpdated.setAuthor(message.getAuthor());
+        messageToBeUpdated.setMessage(message.getMessage());
+        messageToBeUpdated.setUpdatedAt(new Date());
+        messages.put(messageToBeUpdated.getId(),messageToBeUpdated);
+        return messageToBeUpdated;
     }
     public Message deleteMessage(Long id)
     {

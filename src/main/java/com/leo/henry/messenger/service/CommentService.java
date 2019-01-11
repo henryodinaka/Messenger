@@ -19,7 +19,7 @@ public class CommentService {
     {
         Message message = messages.get(messageId);
         if (message == null)
-            throw new WebApplicationException(ExceptionResponseBuilder.buildResponse("message with Id: "+messageId +" not found",404,null));
+            throw new WebApplicationException(ExceptionResponseBuilder.buildResponse("Message with Id: "+messageId +" not found",404,null));
 
         Map<Long,Comment> comments = message.getComments();
         if (comments.size() <=0)
@@ -32,7 +32,7 @@ public class CommentService {
     {
         Message message = messages.get(messageId);
         if (message == null)
-           throw new DataNotFoundException("message with Id: "+messageId +" not found");
+           throw new DataNotFoundException("Message with Id: "+messageId +" not found");
 
 
         Map<Long,Comment> comments = message.getComments();

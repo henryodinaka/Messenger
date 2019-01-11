@@ -1,5 +1,7 @@
 package com.leo.henry.messenger.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.leo.henry.messenger.utils.DateSerializer;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,16 +15,17 @@ import java.util.*;
 public class Message {
     private Long id;
     private String message;
-    private Date createdAt;
+//    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @JsonSerialize(using = DateSerializer.class)
+    private Date createdAt =new Date();
     private Date updatedAt;
     private String author;
     private List<Link> links = new ArrayList<>();
     @XmlTransient
     private Map<Long,Comment> comments = new HashMap<>();
-    public Message(Long id, String message, Date createdAt, String author) {
+    public Message(Long id, String message,String author) {
         this.id = id;
         this.message = message;
-        this.createdAt = createdAt;
         this.author = author;
     }
 

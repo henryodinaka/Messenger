@@ -10,7 +10,7 @@ public class JerseyConfig extends ResourceConfig
 {
     public JerseyConfig()
     {
-        packages("com.leo.henry.messenger.resources","com.leo.henry.messenger.exceptions");
+        packages("com.leo.henry.messenger.resources","com.leo.henry.messenger.exceptions","com.leo.henry.messenger.filter");
 //        register(UserResource.class);
 //        register(MessageResources.class);
     }
