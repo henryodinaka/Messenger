@@ -32,9 +32,9 @@ public class UserResource
         if(user.getFirstName() == null || user.getLastName() == null) {
             return Response.status(400).entity("Please provide all mandatory inputs").build();
         }
-        user.setId(DB.values().size()+1);
+//        user.setId(DB.values().size()+1);
         user.setUri("/user-management/"+user.getId());
-        DB.put(user.getId(), user);
+//        DB.put(user.getId(), user);
         return Response.status(201).contentLocation(new URI(user.getUri())).build();
     }
 
@@ -65,7 +65,7 @@ public class UserResource
         }
         temp.setFirstName(user.getFirstName());
         temp.setLastName(user.getLastName());
-        DB.put(temp.getId(), temp);
+//        DB.put(temp.getId(), temp);
         return Response.status(200).entity(temp).build();
     }
 
@@ -83,18 +83,18 @@ public class UserResource
     static
     {
         User user1 = new User();
-        user1.setId(1);
+//        user1.setId(1);
         user1.setFirstName("John");
         user1.setLastName("Wick");
         user1.setUri("/user-management/1");
  
         User user2 = new User();
-        user2.setId(2);
+//        user2.setId(2);
         user2.setFirstName("Harry");
         user2.setLastName("Potter");
         user2.setUri("/user-management/2");
          
-        DB.put(user1.getId(), user1);
-        DB.put(user2.getId(), user2);
+//        DB.put(user1.getId(), user1);
+//        DB.put(user2.getId(), user2);
     }
 }

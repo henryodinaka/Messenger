@@ -1,45 +1,55 @@
 package com.leo.henry.messenger.service;
 
-import com.leo.henry.messenger.database.DataSource;
-import com.leo.henry.messenger.exceptions.DataNotFoundException;
-import com.leo.henry.messenger.exceptions.ExceptionResponseBuilder;
+import com.leo.henry.messenger.bean.CommentRequest;
 import com.leo.henry.messenger.model.Comment;
 import com.leo.henry.messenger.model.Message;
+import com.leo.henry.messenger.model.User;
+import com.leo.henry.messenger.repository.CommentRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import javax.ws.rs.WebApplicationException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class CommentService {
-    private Map<Long,Message> messages = DataSource.getMessages();
+    @Autowired
+    private CommentRepo commentRepo;
+
+    @Autowired
+    private MessageService messageService;
+    @Autowired
+    private UserService userService;
+
+//    private Map<Long,Message> messages = DataSource.getMessages();
 //    private Map<Long,Comment> commentMap = DataSource.
+
     public List<Comment> getComments(Long messageId)
     {
-        Message message = messages.get(messageId);
-        if (message == null)
-            throw new WebApplicationException(ExceptionResponseBuilder.buildResponse("Message with Id: "+messageId +" not found",404,null));
+//        Message message = messages.get(messageId);
+//        if (message == null)
+//            throw new WebApplicationException(ExceptionResponseBuilder.buildResponse("The requested Message with Id: "+messageId +" not found",404,null));
+//
+//        Set<Comment> comments = message.getComments();
+//        if (comments.size() <=0)
+//            throw new DataNotFoundException("Message with Id: "+messageId+" has no comments",404,null);
 
-        Map<Long,Comment> comments = message.getComments();
-        if (comments.size() <=0)
-            throw new DataNotFoundException("Message with Id: "+messageId+" has no comments");
-
-        return new ArrayList<>(comments.values());
+        return commentRepo.findAllByMessage_Id(messageId);
     }
 
-    public Comment getComment(Long messageId, Long commentId)
+    public Comment getComment(Long commentId)
     {
-        Message message = messages.get(messageId);
-        if (message == null)
-           throw new DataNotFoundException("Message with Id: "+messageId +" not found");
+//        Message message = messages.get(messageId);
+//        if (message == null)
+//           throw new DataNotFoundException("Message with Id: "+messageId +" not found",404,null);
+//
+//
+//        Set<Comment> comments = message.getComments();
+//        if (comments.size() <= 0)
+//            throw new DataNotFoundException("Message with Id: "+messageId+" has no comments",404,null);
 
-
-        Map<Long,Comment> comments = message.getComments();
-        if (comments.size() <= 0)
-            throw new DataNotFoundException("Message with Id: "+messageId+" has no comments");
-
-        return comments.get(commentId);
+        return commentRepo.getOne(commentId);
     }
 
 //    public List<Message> getAllMessagesForYear(int year)
@@ -63,28 +73,34 @@ public class CommentService {
 //        return messageList.subList(start,size);
 //    }
 
-    public Comment postComment(Long messageId, Comment comment)
+    public Comment postComment(CommentRequest commentRequest)
     {
-        Map<Long,Comment> comments = messages.get(messageId).getComments();
-        comment.setId(comments.size()+1L);
-        comment.setCreatedAt(new Date());
-        comments.put(comment.getId(),comment);
-        return comment;
+//       Set<Comment> comments = messages.get(messageId).getComments();
+//        comments.put(commentRequest.getId(),commentRequest);
+        Message message = messageService.getMassage(commentRequest.getMessageId());
+        User user = userService.getOne(commentRequest.getUserId());
+
+        Comment comment = new Comment();
+        comment.setComment(commentRequest.getComment());
+        comment.setMessage(message);
+        comment.setAuthor(user);
+        return commentRepo.save(comment);
     }
-    public Comment updatComment(Long messageId,Long commentId,Comment comment)
+    public Comment updatComment(CommentRequest request)
     {
-        if (messageId <=0 || commentId <=0) return null;
-        Map<Long,Comment> comments = messages.get(messageId).getComments();
-        Comment commentToBeUpdated = comments.get(commentId);
+//        if (messageId <=0 || commentId <=0) return null;
+//       Message message = messages.get(messageId);
+        Comment commentToBeUpdated = commentRepo.getOne(request.getId());
         if (commentToBeUpdated ==null) return null;
-        commentToBeUpdated.setComment(comment.getComment());
-        commentToBeUpdated.setUpdatedAt(new Date());
-        comments.put(commentToBeUpdated.getId(),commentToBeUpdated);
-        return comment;
+        commentToBeUpdated.setComment(request.getComment());
+//        commentToBeUpdated.setUpdatedAt(new Date());
+//        comments.put(commentToBeUpdated.getId(),commentToBeUpdated);
+        return commentRepo.save(commentToBeUpdated);
     }
-    public Comment deleteComment(Long messageId,Long commentId)
+    public void deleteComment(Long commentId)
     {
-        Map<Long,Comment> comments = messages.get(messageId).getComments();
-        return comments.remove(commentId);
+//        Map<Long,Comment> comments = messages.get(messageId).getComments();
+        Comment comment = commentRepo.getOne(commentId);
+        commentRepo.delete(comment);
     }
 }

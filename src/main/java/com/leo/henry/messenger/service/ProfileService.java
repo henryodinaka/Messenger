@@ -2,12 +2,14 @@ package com.leo.henry.messenger.service;
 
 import com.leo.henry.messenger.database.DataSource;
 import com.leo.henry.messenger.model.Profile;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class ProfileService {
     private Map<String,Profile> profiles = DataSource.getProfiles();
     public ProfileService()

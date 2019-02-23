@@ -1,28 +1,45 @@
 package com.leo.henry.messenger.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.leo.henry.messenger.enums.Constants;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
 @Data
+@Entity
+@Table(schema = Constants.SCHEMA_NAME,name = "Comments")
 @NoArgsConstructor
 @XmlRootElement
-public class Comment {
+public class Comment extends SuperModel{
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "Id")
     private Long id;
-    private String comment;
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    private Date createdAt;
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    private Date updatedAt;
-    private String author;
 
-    public Comment(Long id, String comment, Date createdAt, String author) {
+    @NotNull(message = "Comment body cannot be null")
+    @Column
+    private String comment;
+
+    @ManyToOne
+    @JoinColumn(name = "message_Id")
+    private Message message;
+
+//    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+//    private Date createdAt;
+//    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+//    private Date updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "Author_Id",referencedColumnName = "Id")
+    private User author;
+
+    public Comment(Long id, String comment, User author) {
         this.id = id;
         this.comment = comment;
-        this.createdAt = createdAt;
         this.author = author;
     }
 }

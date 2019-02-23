@@ -1,6 +1,9 @@
 package com.leo.henry.messenger.resources;
 
+import com.leo.henry.messenger.bean.MessageDto;
 import com.leo.henry.messenger.bean.MessageFilterBean;
+import com.leo.henry.messenger.model.AuthenticationRequest;
+import com.leo.henry.messenger.model.AuthenticationResponse;
 import com.leo.henry.messenger.service.MessageService;
 import com.leo.henry.messenger.model.Message;
 
@@ -10,11 +13,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Path("/messages")
-@Consumes(value = {MediaType.APPLICATION_JSON})
-@Produces(value = {MediaType.APPLICATION_JSON})
+@Consumes(value = {MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
+@Produces(value = {MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
 public class MessageResources {
     MessageService messageService = new MessageService();
     @GET
@@ -30,9 +35,9 @@ public class MessageResources {
     public Message getMessage(@PathParam("id") Long id,@Context UriInfo uriInfo)
     {
         Message message = messageService.getMassage(id);
-        message.addLinks( getUriForSelf(uriInfo, message),"self");
-        message.addLinks( getUriForProfile(uriInfo, message),"profile");
-        message.addLinks( getUriForComment(uriInfo, message),"comment");
+//        message.addLinks( getUriForSelf(uriInfo, message),"self");
+//        message.addLinks( getUriForProfile(uriInfo, message),"profile");
+//        message.addLinks( getUriForComment(uriInfo, message),"comment");
         return message;
     }
 
@@ -46,7 +51,7 @@ public class MessageResources {
     private String getUriForProfile(@Context UriInfo uriInfo, Message message) {
         return uriInfo.getBaseUriBuilder()
                     .path(ProfileResources.class)
-                    .path(message.getAuthor())
+                    .path(message.getAuthor().getFirstName()+" "+message.getAuthor().getLastName())
                     .build()
                     .toString();
     }
@@ -72,21 +77,31 @@ public class MessageResources {
     }
     @PUT
     @Path("/{id}")
-    public Message updateMessage(@PathParam("id")Long id, Message message)
+    public Message updateMessage(@PathParam("id")Long id, MessageDto message)
     {
         return messageService.updateMessage(id,message);
     }
 
     @DELETE
     @Path("/{id}")
-    public Message deleteMessage(@PathParam("id")Long id)
+    public void deleteMessage(@PathParam("id")Long id)
     {
-        return messageService.deleteMessage(id);
+        messageService.deleteMessage(id);
     }
 
     @Path("/{messageId}/comments")
     public CommentResource getCommentResource()
     {
         return new CommentResource();
+    }
+
+    @POST
+    @Path("/mcash")
+    public AuthenticationResponse mcashMock(AuthenticationRequest request){
+        AuthenticationResponse response = new AuthenticationResponse();
+        response.setResponseCode("00");
+        List<String> list = new ArrayList<>();
+        LinkedList<String> linkedList= new LinkedList<>();
+        return response;
     }
 }

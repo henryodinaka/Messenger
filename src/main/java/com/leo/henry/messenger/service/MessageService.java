@@ -1,41 +1,43 @@
 package com.leo.henry.messenger.service;
 
+import com.leo.henry.messenger.bean.MessageDto;
 import com.leo.henry.messenger.exceptions.DataNotFoundException;
-import com.leo.henry.messenger.database.DataSource;
 import com.leo.henry.messenger.model.Message;
+import com.leo.henry.messenger.repository.MessegerRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
-//@Service
+@Service
 public class MessageService {
 
-   private Map<Long,Message> messages = DataSource.getMessages();
-   public  MessageService()
-   {
-       Message m1  = new Message(1L,"I love You","Henry");
-       Message m2  = new Message(2L,"I will marry You","Jeo");
-       Message m3  = new Message(3L,"I will Kiss you","Leo");
-       messages.put(1L,m1);
-       messages.put(2L,m2);
-       messages.put(3L,m3);
-   }
+    @Autowired
+   private MessegerRepo messegeRepo;
+//   private Map<Message> messages = DataSource.getMessages();
+//   public  MessageService()
+//   {
+//
+//   }
     public List<Message> getMessages()
     {
 
-        return new ArrayList<>(messages.values());
+        return messegeRepo.findAll();
     }
 
     public Message getMassage(Long id)
     {
-        Message message = messages.get(id);
-        if (message ==null)throw new DataNotFoundException("Message with Id: "+id+" not found");
+        Message message = messegeRepo.getOne(id);
+        if (message ==null)throw new DataNotFoundException("Message with Id: "+id+" not found",404,null);
         return message;
     }
     public List<Message> getAllMessagesForYear(int year)
     {
         List<Message> messageList = new ArrayList<>();
         Calendar calendar = Calendar.getInstance();
-        for (Message msg : messages.values())
+        for (Message msg : getMessages())
         {
             calendar.setTime(msg.getCreatedAt());
             if (calendar.get(Calendar.YEAR) ==year){
@@ -46,30 +48,28 @@ public class MessageService {
     }
     public List<Message> getMessagesPaginated(int start,int size)
     {
-        List<Message> messageList = new ArrayList<>(messages.values());
+        List<Message> messageList = getMessages();
        if ((start+size) > messageList.size())return null;
         return messageList.subList(start,size);
     }
     public Message postMessage(Message message)
     {
-        message.setId(messages.size()+1L);
-        messages.put(message.getId(),message);
-        return message;
+        return messegeRepo.save(message);
     }
-    public Message updateMessage(Long id,Message message)
+    public Message updateMessage(Long id,MessageDto message)
     {
 
         if (id <=0) return null;
-        Message messageToBeUpdated = messages.get(id);
+        Message messageToBeUpdated = messegeRepo.getOne(id);
         if (messageToBeUpdated ==null) return null;
         messageToBeUpdated.setAuthor(message.getAuthor());
         messageToBeUpdated.setMessage(message.getMessage());
-        messageToBeUpdated.setUpdatedAt(new Date());
-        messages.put(messageToBeUpdated.getId(),messageToBeUpdated);
+        messageToBeUpdated = messegeRepo.save(messageToBeUpdated);
         return messageToBeUpdated;
     }
-    public Message deleteMessage(Long id)
+    public void deleteMessage(Long id)
     {
-        return messages.remove(id);
+        Message message = messegeRepo.getOne(id);
+        messegeRepo.delete(message);
     }
 }

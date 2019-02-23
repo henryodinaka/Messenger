@@ -11,7 +11,7 @@ import java.util.Date;
 
 public class DateSerializer extends JsonSerializer<Date> {
 
-  private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+  private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
       .withZone(ZoneId.systemDefault());
 
   @Override

@@ -1,7 +1,9 @@
 package com.leo.henry.messenger.resources;
 
+import com.leo.henry.messenger.bean.CommentRequest;
 import com.leo.henry.messenger.model.Comment;
 import com.leo.henry.messenger.service.CommentService;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -21,26 +23,26 @@ public class CommentResource {
     @Path("/{commentId}")
     public Comment getComment(@PathParam("messageId") Long messageId,@PathParam("commentId") Long commentId)
     {
-        return commentService.getComment(messageId,commentId);
+        return commentService.getComment(commentId);
     }
     @POST
-    public Comment postMessage(@PathParam("messageId") Long messageId, Comment comment)
+    public Comment postMessage(@RequestBody CommentRequest comment)
     {
-        return commentService.postComment(messageId,comment);
+        return commentService.postComment(comment);
     }
 
     @PUT
     @Path("/{commentId}")
-    public Comment updateMessage(@PathParam("messageId")Long messageId, @PathParam("commentId")Long commentId, Comment comment)
+    public Comment updateMessage(@RequestBody CommentRequest request)
     {
-        return commentService.updatComment(messageId,commentId,comment);
+        return commentService.updatComment(request);
     }
 
     @DELETE
     @Path("/{commentId}")
-    public Comment deleteMessage(@PathParam("messageId")Long messageId,@PathParam("commentId")Long commentId)
+    public void deleteMessage(@PathParam("commentId")Long commentId)
     {
-        return commentService.deleteComment(messageId,commentId);
+         commentService.deleteComment(commentId);
     }
 
 }
