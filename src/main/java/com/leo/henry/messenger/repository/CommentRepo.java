@@ -14,4 +14,5 @@ public interface CommentRepo extends JpaRepository<Comment,Long> {
 //    @Query("select c from Comment c where c.message.id = :messageId")
     List<Comment> findAllByMessage_Id(Long messageId);
     Page<Comment> findAllByMessage_Id(Long messeageId, Pageable pageable);
+    Comment findByComment(Long id);
 }

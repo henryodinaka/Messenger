@@ -1,0 +1,6 @@
+<queues>
+	<queue name="test.queue">
+		<stats size="10" consumerCount="0" enqueueCount="0"
+			dequeueCount="100" />
+	</queue>
+</queues>
