@@ -1,5 +1,6 @@
 package com.leo.henry.messenger.lecture.IO;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,7 +70,8 @@ class Locations implements Map<Integer,Location> {
     }
 }
 
-class Location {
+class Location  implements Serializable{
+    private long serialVersionUID = 1L;
     private Integer id;
     private String name;
     private String distance;
