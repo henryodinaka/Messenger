@@ -49,7 +49,8 @@ public class CommentService {
 //        if (comments.size() <= 0)
 //            throw new DataNotFoundException("Message with Id: "+messageId+" has no comments",404,null);
 
-        return commentRepo.findByComment(commentId);
+//        return commentRepo.findByComment(commentId);
+        return new Comment(1L,"Hard coded",new User());
     }
 
 //    public List<Message> getAllMessagesForYear(int year)
