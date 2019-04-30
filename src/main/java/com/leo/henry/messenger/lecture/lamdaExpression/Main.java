@@ -39,7 +39,12 @@ public class Main {
             }
         });*/
 
-       Collections.sort(employees,(Employee e1,Employee e2) -> e1.getName().compareTo(e2.getName()));
+       /*Collections.sort(employees,( e1, e2) -> e1.getName().compareTo(e2.getName()));
+        for (Employee employee: employees){
+            System.out.println(employee.getName());
+        }*/
+
+        Collections.sort(employees,Comparator.comparing(Employee::getName));
         for (Employee employee: employees){
             System.out.println(employee.getName());
         }
