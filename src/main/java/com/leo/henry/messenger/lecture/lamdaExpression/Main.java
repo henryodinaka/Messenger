@@ -60,7 +60,29 @@ public class Main {
         });*/
       Employee.printEmployeeByAge(employees,"Employee age below 25",employee -> employee.getAge()< 25);
 //      Employee.printEmployeeByAge(employees,"Employee age above 25",employee -> employee.getAge()> 25);
+        Employee.printStream(employees,"Employees name starting with: ","J");
+
+        System.out.println("===================================");
+        Department hr = new Department("Human resources");
+        hr.addEmployee(jane);
+         hr.addEmployee(paul);
+         hr.addEmployee(john);
+        Department accounting  = new Department("Accounting");
+        accounting.addEmployee(josh);
+        accounting.addEmployee(jane);
+
+        List<Department> departments = new ArrayList<>();
+        departments.add(hr);
+        departments.add(accounting);
+
+        Employee.streamCollect(employees,"P");
+        Employee.streamReduce(departments);
+        Employee.streamFlatMap(departments);
+
+
+
     }
+
 
 }
 
@@ -80,13 +102,49 @@ class Employee{
                 System.out.println(employee.getName().substring(0,2));
         }
     }
-    public static void printStream(List<Employee> employees){
+    public static void printStream(List<Employee> employees,String text,String filter){
+        System.out.println(text+filter);
 
-       /* employees
+        employees
                 .stream()
-                .map(String::toUpperCase)
-                .filter(s->s.toString("J"))
+                .map(Employee::getName)
+                .filter(s->s.startsWith(filter))
                 .sorted()
-                .forEach(System.out.println());*/
+                .forEach(System.out::println);
+    }
+
+    public static void streamCollect(List<Employee> employees,String filter){
+        System.out.println("From streamCollect method"+filter);
+
+        List<String> sortedList = employees
+                .stream()
+                .map(Employee::getName)
+                .filter(s -> s.startsWith(filter))
+                .sorted()
+                .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        for (String s:sortedList ){
+            System.out.println(s);
+        }
+    }
+
+    public static void streamReduce(List<Department> departments){
+        System.out.println("Returning employee with the youngest age");
+            departments
+                .stream()
+                .flatMap(department ->department.getEmployees().stream())
+                .reduce((e1,e2) -> e1.getAge() < e2.getAge() ? e1 : e2)
+                .ifPresent(System.out::println);
+
+    }
+
+    public static void streamFlatMap(List<Department> departments) {
+        System.out.println("Printing all employees in a department Using stream and flatMap");
+        departments.stream()
+                .flatMap(department -> department.getEmployees().stream())
+                .forEach(System.out::println);
+    }
+    @Override
+    public String toString() {
+        return name ;
     }
 }
